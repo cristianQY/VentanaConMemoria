@@ -2,11 +2,15 @@ package dad;
 
 import javafx.application.Application;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Slider;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -20,6 +24,10 @@ public class VentanaConMemoriaApp extends Application {
     private DoubleProperty y = new SimpleDoubleProperty();
     private DoubleProperty width = new SimpleDoubleProperty();
     private DoubleProperty height = new SimpleDoubleProperty();
+
+    private IntegerProperty red = new SimpleIntegerProperty();
+    private IntegerProperty green = new SimpleIntegerProperty();
+    private IntegerProperty blue = new SimpleIntegerProperty();
 
 
     @Override
@@ -42,6 +50,10 @@ public class VentanaConMemoriaApp extends Application {
             height.set(Double.parseDouble(props.getProperty("size.height")));
             x.set(Double.parseDouble(props.getProperty("size.x")));
             y.set(Double.parseDouble(props.getProperty("size.y")));
+            red.set(Integer.parseInt(props.getProperty("color.red")));
+            green.set(Integer.parseInt(props.getProperty("color.green")));
+            blue.set(Integer.parseInt(props.getProperty("color.blue")));
+
 
         }
 
@@ -67,10 +79,26 @@ public class VentanaConMemoriaApp extends Application {
         redSlider.setMajorTickUnit(255);
         redSlider.setMinorTickCount(5);
 
+        Slider greenSlider = new Slider();
+        greenSlider.setMin(0);
+        greenSlider.setMax(255);
+        greenSlider.setShowTickLabels(true);
+        greenSlider.setShowTickMarks(true);
+        greenSlider.setMajorTickUnit(255);
+        greenSlider.setMinorTickCount(5);
+
+        Slider blueSlider = new Slider();
+        blueSlider.setMin(0);
+        blueSlider.setMax(255);
+        blueSlider.setShowTickLabels(true);
+        blueSlider.setShowTickMarks(true);
+        blueSlider.setMajorTickUnit(255);
+        blueSlider.setMinorTickCount(5);
+
         VBox root = new VBox();
         root.setFillWidth(false);
         root.setAlignment(Pos.CENTER);
-        root.getChildren().add(redSlider);
+        root.getChildren().addAll(redSlider, greenSlider, blueSlider);
 
         Scene scene = new Scene(root, width.get(), height.get());
 
@@ -84,6 +112,26 @@ public class VentanaConMemoriaApp extends Application {
         y.bind(primaryStage.yProperty());
         width.bind(primaryStage.widthProperty());
         height.bind(primaryStage.heightProperty());
+
+        redSlider.valueProperty().bindBidirectional(red);
+        greenSlider.valueProperty().bindBidirectional(green);
+        blueSlider.valueProperty().bindBidirectional(blue);
+
+
+        red.addListener((o, ov, nv) -> {
+            Color c = Color.rgb(nv.intValue(), green.get(), blue.get());
+            root.setBackground(Background.fill(c));
+        });
+
+        green.addListener((o, ov, nv) -> {
+            Color c = Color.rgb(red.get(), nv.intValue(), blue.get());
+            root.setBackground(Background.fill(c));
+        });
+
+        blue.addListener((o, ov, nv) -> {
+            Color c = Color.rgb(red.get(), green.get(), nv.intValue());
+            root.setBackground(Background.fill(c));
+        });
     }
 
     @Override
@@ -104,6 +152,9 @@ public class VentanaConMemoriaApp extends Application {
         props.setProperty("size.height", "" + height.getValue());
         props.setProperty("size.x", "" + x.getValue());
         props.setProperty("size.y", "" + y.getValue());
+        props.setProperty("color.red", "" + red.get());
+        props.setProperty("color.green", "" + green.get());
+        props.setProperty("color.blue", "" + blue.get());
         props.store(fos, "Estado de la ventana");
 
     }
