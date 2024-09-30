@@ -20,6 +20,8 @@ import java.util.Properties;
 
 public class VentanaConMemoriaApp extends Application {
 
+    private VBox root = new VBox();
+
     private DoubleProperty x = new SimpleDoubleProperty();
     private DoubleProperty y = new SimpleDoubleProperty();
     private DoubleProperty width = new SimpleDoubleProperty();
@@ -53,6 +55,8 @@ public class VentanaConMemoriaApp extends Application {
             red.set(Integer.parseInt(props.getProperty("color.red")));
             green.set(Integer.parseInt(props.getProperty("color.green")));
             blue.set(Integer.parseInt(props.getProperty("color.blue")));
+            Color c = Color.rgb(red.get(), green.get(), blue.get());
+            root.setBackground(Background.fill(c));
 
 
         }
@@ -95,7 +99,7 @@ public class VentanaConMemoriaApp extends Application {
         blueSlider.setMajorTickUnit(255);
         blueSlider.setMinorTickCount(5);
 
-        VBox root = new VBox();
+
         root.setFillWidth(false);
         root.setAlignment(Pos.CENTER);
         root.getChildren().addAll(redSlider, greenSlider, blueSlider);
@@ -155,6 +159,7 @@ public class VentanaConMemoriaApp extends Application {
         props.setProperty("color.red", "" + red.get());
         props.setProperty("color.green", "" + green.get());
         props.setProperty("color.blue", "" + blue.get());
+        props.setProperty("color.root", "" + root.getBackground());
         props.store(fos, "Estado de la ventana");
 
     }
