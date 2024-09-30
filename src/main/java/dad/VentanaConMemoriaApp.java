@@ -57,8 +57,7 @@ public class VentanaConMemoriaApp extends Application {
             blue.set(Integer.parseInt(props.getProperty("color.blue")));
             Color c = Color.rgb(red.get(), green.get(), blue.get());
             root.setBackground(Background.fill(c));
-
-
+            
         }
 
         else {
